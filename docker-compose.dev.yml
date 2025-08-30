@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  ezzzbet-psqldb:
+    image: postgres:latest
+    container_name: ezzzbet-psqldb-dev
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./db_seeds:/docker-entrypoint-initdb.d
+    networks:
+      - ezzzbet-network-dev
+    restart: always
+
+  # Next.js Development Application with Hot Reload
+  ezzzbet-app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: ezzzbet-app-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGHOST=ezzzbet-psqldb
+      - PGDATABASE=${PGDATABASE}
+      - PGPORT=${PGPORT}
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true  # Enable polling for file changes in Docker
+      - CHOKIDAR_USEPOLLING=true # Alternative file watching method
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      # Prevent node_modules from being overwritten
+      - /app/node_modules
+      # Prevent .next from being overwritten to avoid permission issues
+      - /app/.next
+    restart: always
+    depends_on:
+      - ezzzbet-psqldb
+    networks:
+      - ezzzbet-network-dev
+    # Enable TTY for better logging
+    tty: true
+    stdin_open: true
+
+  # PostgreSQL Admin Interface
+  ezzzbet-pgadmin-dev:
+    image: dpage/pgadmin4
+    container_name: ezzzbet-pgadmin-dev
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data_dev:/var/lib/pgadmin
+    depends_on:
+      - ezzzbet-psqldb
+    networks:
+      - ezzzbet-network-dev
+    restart: always
+
+volumes:
+  postgres_data_dev:
+  pgadmin_data_dev:
+
+networks:
+  ezzzbet-network-dev:
+    name: ezzzbet-network-dev
+    driver: bridge
