@@ -1,14 +1,14 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
+  # Database service
   ezzzbet-psqldb:
     image: postgres:latest
     container_name: ezzzbet-psqldb
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:-ezzzbet_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ezzzbet_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-ezzzbet_db}
     ports:
       - "5432:5432"
     volumes:
@@ -18,34 +18,7 @@ services:
       - ezzzbet-network
     restart: always
 
-  # Main Next.js Application
-  ezzzbet-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: ezzzbet-app
-    ports:
-      - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION}
-      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-      - PGUSER=${PGUSER}
-      - PGPASSWORD=${PGPASSWORD}
-      - PGHOST=ezzzbet-psqldb
-      - PGDATABASE=${PGDATABASE}
-      - PGPORT=${PGPORT}
-      - NODE_ENV=${NODE_ENV}
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
-    restart: always
-    depends_on:
-      - ezzzbet-psqldb
-    networks:
-      - ezzzbet-network
-
-  # PostgreSQL Admin Interface
+  # Database administration
   ezzzbet-pgadmin:
     image: dpage/pgadmin4
     container_name: ezzzbet-pgadmin

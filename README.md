@@ -1,144 +1,140 @@
-# EzzzBet
+# EzzzBet - Electron Betting Application
 
-A modern betting platform built with Next.js, MUI v7, Zustand, and PostgreSQL.
+A modern desktop betting application built with Electron, React, MUI v7, and Zustand for state management.
 
 ## Features
 
-- 🚀 **Next.js 15** with App Router and TypeScript
-- 🎨 **Material-UI v7** for beautiful, responsive UI components
-- 🔄 **Zustand** for lightweight state management
-- 🐘 **PostgreSQL** database with connection pooling
-- 🐳 **Docker** containerization with Docker Compose
-- 📦 **pnpm** for fast package management
-- 🎯 **ESLint** for code quality
-- 🎨 **Tailwind CSS** for utility-first styling
+- 🎰 Modern betting interface with Material-UI v7
+- 🌙 Dark/Light theme support
+- 💾 PostgreSQL database integration
+- 🔄 Real-time state management with Zustand
+- 🐳 Docker development environment
+- 📱 Responsive design
+- 🔔 Toast notifications
 
-## Quick Start
+## Tech Stack
+
+- **Frontend**: React 19, Material-UI v7, Zustand
+- **Backend**: Electron, Node.js, PostgreSQL
+- **Development**: Docker Compose, TypeScript, Webpack
+- **Database**: PostgreSQL with Docker
+
+## Development Setup
 
 ### Prerequisites
 
-- Node.js 18+ 
-- pnpm
-- Docker & Docker Compose
+- Node.js (>=14.x)
+- Docker and Docker Compose
+- npm (>=7.x)
 
-### Installation
+### Quick Start
 
-1. **Clone and setup:**
+1. **Clone and setup the project**:
    ```bash
    git clone <repository-url>
    cd ezzzbet
-   pnpm install
    ```
 
-2. **Environment setup:**
+2. **Start the database services**:
    ```bash
-   cp env.example .env.local
-   # Edit .env.local with your configuration
+   docker-compose up -d
    ```
+   This will start:
+   - PostgreSQL database on port 5432
+   - pgAdmin on port 5050 (admin@admin.com / admin)
 
-3. **Start with Docker (Recommended):**
+3. **Setup environment variables**:
    ```bash
-   # Start all services
-   pnpm run docker:up
-   
-   # View logs
-   pnpm run docker:logs
-   
-   # Stop services
-   pnpm run docker:down
+   cp env.example .env
    ```
 
-4. **Or start development locally:**
+4. **Install dependencies and start the Electron app**:
    ```bash
-   # Start only database
-   pnpm run db:up
-   
-   # Start Next.js dev server
-   pnpm run dev
+   cd ezzzbet
+   npm install
+   npm start
    ```
 
-## Available Scripts
+### Database Access
 
-- `pnpm dev` - Start development server with Turbopack
-- `pnpm build` - Build production application
-- `pnpm start` - Start production server
-- `pnpm lint` - Run ESLint
-- `pnpm type-check` - Run TypeScript type checking
+- **PostgreSQL**: `localhost:5432`
+  - Database: `ezzzbet_db`
+  - User: `ezzzbet_user`
+  - Password: `ezzzbet_pass`
 
-### Docker Scripts
+- **pgAdmin**: `http://localhost:5050`
+  - Email: `admin@admin.com`
+  - Password: `admin`
 
-- `pnpm run docker:build` - Build Docker images
-- `pnpm run docker:up` - Start all services
-- `pnpm run docker:down` - Stop all services
-- `pnpm run docker:logs` - View service logs
-- `pnpm run db:up` - Start only database
-- `pnpm run db:down` - Stop database
+### Available Scripts
 
-## Services
+In the `ezzzbet` directory:
 
-When running with Docker Compose, the following services are available:
-
-- **App**: http://localhost:3000 - Main Next.js application
-- **PostgreSQL**: localhost:5432 - Database server
-- **pgAdmin**: http://localhost:5050 - Database administration
-  - Email: admin@admin.com
-  - Password: admin
-
-## API Endpoints
-
-- `GET /api/health` - Health check and database status
+- `npm start` - Start the development server
+- `npm run build` - Build for production
+- `npm test` - Run tests
+- `npm run lint` - Run ESLint
+- `npm run package` - Package the app for distribution
 
 ## Project Structure
 
 ```
-src/
-├── app/                 # Next.js app router
-│   ├── api/            # API routes
-│   ├── globals.css     # Global styles
-│   ├── layout.tsx      # Root layout
-│   └── page.tsx        # Home page
-├── lib/                # Utility libraries
-│   └── db.ts          # Database configuration
-├── providers/          # React providers
-│   └── ThemeProvider.tsx
-├── stores/             # Zustand stores
-│   └── useAppStore.ts
-└── theme/              # MUI theme configuration
-    └── theme.ts
+ezzzbet/
+├── src/
+│   ├── main/                 # Electron main process
+│   │   ├── main.ts          # Main process entry point
+│   │   ├── preload.ts       # Preload script for IPC
+│   │   └── menu.ts          # Application menu
+│   └── renderer/            # Electron renderer process
+│       ├── components/      # React components
+│       ├── stores/          # Zustand stores
+│       ├── utils/           # Utility functions
+│       ├── types/           # TypeScript type definitions
+│       └── App.tsx          # Main React component
+├── assets/                  # Static assets
+├── db_seeds/               # Database initialization scripts
+├── docker-compose.yml      # Docker services configuration
+└── package.json           # Dependencies and scripts
 ```
 
-## Database
+## Key Components
 
-The application uses PostgreSQL with the following tables:
-- `users` - User accounts and balances
-- `bets` - Betting records
-- `transactions` - Financial transactions
+### Stores (Zustand)
 
-Database seeds are automatically applied from `db_seeds/` directory.
+- **useAppStore**: Global app state (user, theme, locale)
+- **useBettingStore**: Betting-related state management
 
-## Development
+### Components
 
-1. The app uses MUI v7 components with a custom theme
-2. Zustand provides lightweight state management
-3. PostgreSQL handles data persistence
-4. Docker Compose orchestrates the development environment
+- **ThemeProvider**: MUI theme management with dark/light mode
+- **BettingCard**: Interactive betting card component
+- **Toast**: Custom toast notification system
 
-## Environment Variables
+### Database Integration
 
-Key environment variables (see `env.example`):
+The app includes a complete PostgreSQL integration with:
+- Connection management via IPC
+- CRUD operations
+- Database seeding
+- Error handling
 
-```env
-# Database
-POSTGRES_USER=ezzzbet_user
-POSTGRES_PASSWORD=ezzzbet_password
-POSTGRES_DB=ezzzbet_db
-PGHOST=localhost
-PGPORT=5432
+## Development Features
 
-# App
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-NODE_ENV=development
+- Hot reload for development
+- Redux DevTools integration (Zustand)
+- TypeScript support
+- ESLint configuration
+- Docker development environment
+
+## Building for Production
+
+```bash
+cd ezzzbet
+npm run build
+npm run package
 ```
+
+This will create a distributable package in the `release/build` directory.
 
 ## Contributing
 
@@ -150,4 +146,4 @@ NODE_ENV=development
 
 ## License
 
-This project is private and proprietary.
+This project is licensed under the MIT License.

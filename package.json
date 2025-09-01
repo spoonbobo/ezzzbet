@@ -1,51 +1,5 @@
 {
-  "name": "ezzzbet",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint",
-    "type-check": "tsc --noEmit",
-    
-    "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    
-    "docker:dev:build": "docker-compose -f docker-compose.dev.yml build",
-    "docker:dev:up": "docker-compose -f docker-compose.dev.yml up -d",
-    "docker:dev:down": "docker-compose -f docker-compose.dev.yml down",
-    "docker:dev:logs": "docker-compose -f docker-compose.dev.yml logs -f",
-    "docker:dev:restart": "docker-compose -f docker-compose.dev.yml restart ezzzbet-app-dev",
-    
-    "db:up": "docker-compose up -d ezzzbet-psqldb",
-    "db:down": "docker-compose down ezzzbet-psqldb",
-    "db:dev:up": "docker-compose -f docker-compose.dev.yml up -d ezzzbet-psqldb",
-    "db:dev:down": "docker-compose -f docker-compose.dev.yml down ezzzbet-psqldb"
-  },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^7.3.1",
-    "@mui/material": "^7.3.1",
-    "@types/pg": "^8.15.5",
-    "next": "15.5.2",
-    "pg": "^8.16.3",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "zustand": "^5.0.8"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.5.2",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "playwright": "^1.55.0"
   }
 }
